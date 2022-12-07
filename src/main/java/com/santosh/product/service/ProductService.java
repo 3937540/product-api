@@ -1,10 +1,15 @@
 package com.santosh.product.service;
 
-import com.santosh.product.dto.Product;
-import com.santosh.product.entity.ProductEntity;
+import java.util.List;
+
+import com.santosh.product.dto.ProductsResponse;
+import com.santosh.product.dto.RequestDTO;
+import com.santosh.product.dto.ResponseInfo;
 
 public interface ProductService {
 	
-	ProductEntity saveProduct(Product product);
+	ResponseInfo saveProduct(RequestDTO product);
+
+	List<ResponseInfo> getAllProducts();
 
 }
