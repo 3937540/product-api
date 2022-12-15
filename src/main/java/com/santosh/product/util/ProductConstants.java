@@ -8,4 +8,5 @@ public final class ProductConstants {
 	public static final String SUCCESS = "Success";
 	public static final String INVALID_REQ = "Invalid request";
 	public static final String ERROR = "Error";
+	public static final String WARN = "Warn";
 }

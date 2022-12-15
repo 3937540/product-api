@@ -27,11 +27,16 @@ public class ProductUtil {
 	}
 
 	public ResponseInfo createResponseInfo(ProductEntity productEntity) {
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setId(productEntity.getProductId());
-		responseInfo.setProductName(productEntity.getProductName());
-		responseInfo.setProductPrice(productEntity.getProductPrice());
-		responseInfo.setProductQuantity(productEntity.getProductQuantity());
+		ResponseInfo responseInfo = null;
+		
+		if(null != productEntity) {
+			responseInfo = new ResponseInfo();
+			responseInfo.setId(productEntity.getProductId());
+			responseInfo.setProductName(productEntity.getProductName());
+			responseInfo.setProductPrice(productEntity.getProductPrice());
+			responseInfo.setProductQuantity(productEntity.getProductQuantity());
+		}
+		
 		return responseInfo;
 	}
 

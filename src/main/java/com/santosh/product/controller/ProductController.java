@@ -4,24 +4,29 @@ import static com.santosh.product.util.ProductConstants.ERROR;
 import static com.santosh.product.util.ProductConstants.INVALID_REQ;
 import static com.santosh.product.util.ProductConstants.SUCCESS;
 import static com.santosh.product.util.ProductConstants.ZERO;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.santosh.product.dto.ResponseDTO;
+import com.santosh.product.dto.ProductDTO;
 import com.santosh.product.dto.ProductsResponse;
 import com.santosh.product.dto.RequestDTO;
+import com.santosh.product.dto.ResponseDTO;
 import com.santosh.product.dto.ResponseInfo;
-import com.santosh.product.entity.ProductEntity;
 import com.santosh.product.service.ProductService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +40,7 @@ public class ProductController {
 	private ProductService service;
 
 	// Add products into DB.
-	@PostMapping
+	@PostMapping(produces = {APPLICATION_JSON_VALUE})
 	public ResponseDTO addProducts(@RequestBody RequestDTO requestDTO) {
 
 		String result = "Successfully saved the product";
@@ -76,8 +81,8 @@ public class ProductController {
 	}
 
 	// Get all products from DB.
-	@GetMapping
-	public ProductsResponse getProducts() {
+	@GetMapping(produces = {APPLICATION_JSON_VALUE})
+	public ProductsResponse getAllProducts() {
 		
 		String result = "Successfully fetched products from DB.";
 		String status = SUCCESS;
@@ -100,25 +105,95 @@ public class ProductController {
 
 	
 	// Get any particular product from DB.
-	@GetMapping(path = "${product.id}")
-	public ResponseDTO getProduct() {
+	@GetMapping(path = "{id}", produces = {APPLICATION_JSON_VALUE})
+	public ResponseDTO getProduct(@PathVariable Long id) {
 
-		return null;
+		log.info("Fetching the product with id: {}", id);
+		String result = "Successfully fetched the product";
+		String status = SUCCESS;
+		int statusCode = HttpStatus.OK.value();
+		ResponseInfo responseInfo = null;
+		
+		try {
+			
+			responseInfo = service.getProduct(id);
+			
+			if(responseInfo == null) {
+				result = "Product is not available";
+				status = ERROR;
+				statusCode = HttpStatus.NOT_FOUND.value();
+				log.warn(result);
+			}
+			
+		}catch(Exception ex) {
+			result = "Problem in fetching this product from DB";
+			status = ERROR;
+			statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
+			log.error(result, ex);
+		}
+		
+		return populateProductResponse(result, status, statusCode, responseInfo);
 	}
 
 	// Update any particular product in DB.
-	@PutMapping(path = "${product.id}")
-	public ResponseDTO updateProduct() {
+	// Use validation frame work to validate the client request.
+	@PutMapping(produces = {APPLICATION_JSON_VALUE})
+	public ResponseDTO updateProduct(@Valid @RequestBody ProductDTO productDTO) {
 
-		return null;
+		log.info("Updating the product with product ID: {}", productDTO.getProductId());
+		String result = "Product updated successfully.";
+		String status = SUCCESS;
+		int statusCode = HttpStatus.OK.value();
+		ResponseInfo responseInfo = null;
+		try {
+			
+			responseInfo = service.updateProduct(productDTO);
+			if(null == responseInfo) {
+				result = "Product with productId: "+ productDTO.getProductId() +" is not available in DB.";
+				status = ERROR;
+				statusCode = HttpStatus.NOT_FOUND.value();
+				log.error(result);
+			}
+			
+		}catch(Exception ex) {
+			result = "Problem in updating the product in DB.";
+			status = ERROR;
+			statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
+			log.error(result, ex);
+		}
+		
+		return populateProductResponse(result, status, statusCode, responseInfo);
 	}
 
 	// Delete a product from the DB.
-	@DeleteMapping(path = "${product.id}")
-	public ResponseDTO deleteProduct() {
+	@DeleteMapping(path = "{id}", produces = {APPLICATION_JSON_VALUE})
+	public ResponseDTO deleteProduct(@PathVariable Long id) {
 
-		return null;
+		String result = "Product deleted successfully.";
+		String status = SUCCESS;
+		int statusCode = HttpStatus.OK.value();
+		ResponseInfo responseInfo = null;
+		try {
+			service.deleteProduct(id);
+			
+		}catch(EmptyResultDataAccessException ex) {
+			result = "There's no product with productId: " + id;
+			status = ERROR;
+			statusCode = HttpStatus.NOT_FOUND.value();
+			log.error(result, ex);
+		}
+		catch(Exception ex) {
+			result = "Problem in updating the product in DB.";
+			status = ERROR;
+			statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
+			log.error(result, ex);
+			
+		}
+		
+		return populateProductResponse(result, status, statusCode, responseInfo);
 	}
+	
+	
 	
 	private ResponseDTO populateProductResponse(String result, String status, int statusCode,
 			ResponseInfo responseInfo) {
