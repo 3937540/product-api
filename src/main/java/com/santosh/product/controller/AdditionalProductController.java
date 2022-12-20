@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.santosh.product.dto.ResponseDTO;
 import com.santosh.product.dto.ResponseInfo;
+import com.santosh.product.entity.ProductEntity;
 import com.santosh.product.service.AdditionalProductService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -100,6 +101,16 @@ public class AdditionalProductController {
 
 		}
 
+	}
+	
+	
+	@GetMapping(path = "/getproductbyname", produces = {APPLICATION_JSON_VALUE})
+	public ProductEntity getProductByName(@RequestParam(value = "productNm", required = true) final String productNm) {
+		
+		ProductEntity entity = service.getProductByName(productNm);
+		log.info("Product Entity:: " + entity);
+		return entity;
+		
 	}
 
 	private ResponseDTO populateProductResponse(String result, String status, int statusCode,

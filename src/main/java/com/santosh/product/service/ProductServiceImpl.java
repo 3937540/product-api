@@ -1,6 +1,8 @@
 package com.santosh.product.service;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
 import com.santosh.product.dto.ProductDTO;
 import com.santosh.product.dto.ProductsResponse;
@@ -43,19 +46,19 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<ResponseInfo> getAllProducts() {
-		
+
 		List<ResponseInfo> response = null;
 		LOGGER.info("Fetching all products from the DB.");
 //		List<ProductEntity> listOfProducts = repository.findAll();
 		List<ProductEntity> listOfProducts = repository.findAll(Sort.by(Sort.Direction.ASC, "productQuantity"));
-		if(!listOfProducts.isEmpty()) {
+		if (!listOfProducts.isEmpty()) {
 			LOGGER.info("Fetched {} products from the DB.", listOfProducts.size());
 			response = utility.createListOfResponseInfo(listOfProducts);
-		}else {
+		} else {
 			LOGGER.info("There's no product available in the DB.");
-			
+
 		}
-			
+
 		return response;
 	}
 
@@ -64,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
 		LOGGER.info("Fetching product from DB for productId: {}", productId);
 		ResponseInfo responseInfo = null;
 		Optional<ProductEntity> entity = repository.findById(productId);
-		if(entity.isPresent()) {
+		if (entity.isPresent()) {
 			responseInfo = utility.createResponseInfo(entity.get());
 			LOGGER.info("Successfully fetched the product from DB.");
 		}
@@ -75,13 +78,13 @@ public class ProductServiceImpl implements ProductService {
 	public ResponseInfo updateProduct(ProductDTO productDTO) {
 		LOGGER.info("Updating the product in DB for productId: {}", productDTO.getProductId());
 		ProductEntity productEntity = repository.findById(productDTO.getProductId()).orElse(null);
-		if(null != productEntity) {
+		if (null != productEntity) {
 			productEntity.setProductName(productDTO.getProductName());
 			productEntity.setProductPrice(productDTO.getProductPrice());
 			productEntity.setProductQuantity(productDTO.getProductQuantity());
 			productEntity = repository.save(productEntity);
 			LOGGER.info("Successfully updated the product in DB for productId: {}", productDTO.getProductId());
-		}else {
+		} else {
 			LOGGER.info("The product with productId: {} is not available in DB.", productDTO.getProductId());
 		}
 		return utility.createResponseInfo(productEntity);
@@ -92,6 +95,20 @@ public class ProductServiceImpl implements ProductService {
 		LOGGER.info("Deleting the product from DB with productId: {}", id);
 		repository.deleteById(id);
 		LOGGER.info("Successfully deleted the product from DB with productId: {}", id);
+	}
+
+	@Override
+	public ProductEntity updateProductByField(Long id, Map<String, Object> fields) {
+		ProductEntity productEntity = repository.findById(id).orElse(null);
+
+		fields.forEach((key, value) -> {
+			
+			Field field = ReflectionUtils.findField(ProductEntity.class, key);
+			field.setAccessible(true);
+			ReflectionUtils.setField(field, productEntity, value);
+		});
+		return repository.save(productEntity);
+
 	}
 
 }

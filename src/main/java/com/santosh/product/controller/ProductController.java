@@ -7,6 +7,7 @@ import static com.santosh.product.util.ProductConstants.ZERO;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -15,6 +16,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,6 +29,7 @@ import com.santosh.product.dto.ProductsResponse;
 import com.santosh.product.dto.RequestDTO;
 import com.santosh.product.dto.ResponseDTO;
 import com.santosh.product.dto.ResponseInfo;
+import com.santosh.product.entity.ProductEntity;
 import com.santosh.product.service.ProductService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -194,6 +197,11 @@ public class ProductController {
 	}
 	
 	
+	@PatchMapping(path = "{id}")
+	public ProductEntity updatePatchRequest(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
+		
+		return service.updateProductByField(id, fields);
+	}
 	
 	private ResponseDTO populateProductResponse(String result, String status, int statusCode,
 			ResponseInfo responseInfo) {
