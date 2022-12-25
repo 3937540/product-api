@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -84,7 +85,7 @@ public class ProductController {
 	}
 
 	// Get all products from DB.
-	@GetMapping(produces = {APPLICATION_JSON_VALUE})
+	@GetMapping(produces = {APPLICATION_JSON_VALUE}, consumes = {APPLICATION_JSON_VALUE})
 	public ProductsResponse getAllProducts() {
 		
 		String result = "Successfully fetched products from DB.";
