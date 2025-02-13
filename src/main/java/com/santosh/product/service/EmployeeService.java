@@ -1,5 +1,6 @@
 package com.santosh.product.service;
 
+import com.santosh.product.dto.EmployeeDeptDetails;
 import com.santosh.product.dto.EmployeeDetails;
 import com.santosh.product.entity.EmployeeEntity;
 import com.santosh.product.repository.EmployeeRepository;
@@ -18,8 +19,12 @@ public class EmployeeService {
     @Autowired
     private ProductUtil utility;
     public EmployeeDetails getEmployeeDetail(int empid){
-
         EmployeeEntity entity = repository.findByEmpId(empid);
         return utility.createEmployeeResponse(entity);
+    }
+
+    public EmployeeDeptDetails getEmployeeDeptDetail(int empid) {
+        EmployeeEntity entity = repository.findByEmpId(empid);
+        return utility.createEmployeeDeptResponse(entity);
     }
 }

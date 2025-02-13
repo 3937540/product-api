@@ -1,5 +1,6 @@
 package com.santosh.product.util;
 
+import com.santosh.product.dto.EmployeeDeptDetails;
 import com.santosh.product.dto.EmployeeDetails;
 import com.santosh.product.entity.EmployeeEntity;
 import org.springframework.stereotype.Component;
@@ -63,5 +64,13 @@ public class ProductUtil {
 		empDtl.setName(entity.getEmpName());
 		empDtl.setAge(entity.getEmpAge());
 		return empDtl;
+	}
+
+	public EmployeeDeptDetails createEmployeeDeptResponse(EmployeeEntity entity) {
+		EmployeeDeptDetails empDeptDtls = new EmployeeDeptDetails();
+		empDeptDtls.setId(entity.getEmpId());
+		empDeptDtls.setSal(entity.getEmpSal());
+		empDeptDtls.setDept(entity.getEmpDept());
+		return empDeptDtls;
 	}
 }
