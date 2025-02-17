@@ -26,6 +26,22 @@ public class EmployeeController {
 
     @GetMapping(path = "/getemployeedept", produces = {APPLICATION_JSON_VALUE})
     public EmployeeDeptDetails getEmployeeDetails(@RequestParam(value = "empid") final int empid){
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return service.getEmployeeDeptDetail(empid);
+    }
+
+    @GetMapping(path = "/testtimeout", produces = {APPLICATION_JSON_VALUE})
+    public String testTimeOut(@RequestParam(value = "name") final String name){
+        log.info("Timeout service called..");
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return "Hello, " + name;
     }
 }
