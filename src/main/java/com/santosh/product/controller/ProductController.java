@@ -140,7 +140,7 @@ public class ProductController {
 	}
 
 	// Update any particular product in DB.
-	// Use validation frame work to validate the client request.
+	// Use validation framework to validate the client request.
 	@PutMapping(produces = {APPLICATION_JSON_VALUE})
 	public ResponseDTO updateProduct(@Valid @RequestBody ProductDTO productDTO) {
 
