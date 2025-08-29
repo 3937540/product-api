@@ -11,7 +11,7 @@ public interface AdditionalProductService {
 	ResponseInfo getProduct(Long productId, String productNm);
 
 	ProductEntity getProductByName(String productNm);
-	
-	
+
+	ResponseInfo getProductById(Long productId);
 
 }

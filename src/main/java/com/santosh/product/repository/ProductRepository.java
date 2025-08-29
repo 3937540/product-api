@@ -12,6 +12,8 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long>{
 
 	ProductEntity findProductByProductIdAndProductName(@Param("productId") final Long productId, @Param("productNm") final String productNm);
 
+	ProductEntity findProductByProductId(@Param("productId") final Long productId);
+
 	//@Query("select productPrice from ProductEntity where productName =:productNm and actFlg = 'Y'")
 	//@Query(value = "select * from PRODUCT_DTL where PRDCT_NM =:productNm", nativeQuery = true)
 	@Query("select pe from ProductEntity pe where pe.productName =:productNm")

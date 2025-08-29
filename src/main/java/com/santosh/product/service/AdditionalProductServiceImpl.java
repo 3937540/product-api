@@ -38,4 +38,11 @@ public class AdditionalProductServiceImpl implements AdditionalProductService{
 		return repository.getProductByName(productNm);
 	}
 
+	@Override
+	public ResponseInfo getProductById(Long productId) {
+
+		LOGGER.info("AdditionalProductServiceImpl:: getProductById():: Product ID: {}", productId);
+		ProductEntity entity = repository.findProductByProductId(productId);
+		return utility.createResponseInfo(entity);
+	}
 }
