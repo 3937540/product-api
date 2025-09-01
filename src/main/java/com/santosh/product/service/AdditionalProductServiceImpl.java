@@ -1,5 +1,6 @@
 package com.santosh.product.service;
 
+import com.santosh.product.dto.RequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +45,16 @@ public class AdditionalProductServiceImpl implements AdditionalProductService{
 		LOGGER.info("AdditionalProductServiceImpl:: getProductById():: Product ID: {}", productId);
 		ProductEntity entity = repository.findProductByProductId(productId);
 		return utility.createResponseInfo(entity);
+	}
+
+	@Override
+	public ResponseInfo saveProduct(RequestDTO product) {
+
+		LOGGER.info("Saving the product into DB.");
+		ProductEntity productEntity = utility.createProductEntity(product, new ProductEntity());
+		productEntity = repository.save(productEntity);
+		LOGGER.info("Product saved into DB successfully.");
+		return utility.createResponseInfo(productEntity);
+
 	}
 }

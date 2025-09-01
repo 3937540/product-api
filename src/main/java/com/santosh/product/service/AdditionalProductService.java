@@ -1,5 +1,6 @@
 package com.santosh.product.service;
 
+import com.santosh.product.dto.RequestDTO;
 import org.springframework.stereotype.Service;
 
 import com.santosh.product.dto.ResponseInfo;
@@ -13,5 +14,7 @@ public interface AdditionalProductService {
 	ProductEntity getProductByName(String productNm);
 
 	ResponseInfo getProductById(Long productId);
+
+	ResponseInfo saveProduct(RequestDTO product);
 
 }

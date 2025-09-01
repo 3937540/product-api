@@ -2,6 +2,7 @@ package com.santosh.product.dto;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.Data;
@@ -15,6 +16,7 @@ public class ResponseDTO implements Serializable{
 	private int returnCode;
 	private String returnMessage;
 	private String status;
+	@JsonInclude(JsonInclude.Include.NON_EMPTY) //JsonInclude.Include.NON_NULL
 	private ResponseInfo resultDTO;
 
 }
